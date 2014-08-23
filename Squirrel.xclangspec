@@ -1,0 +1,383 @@
+(
+	{
+		Identifier = "xcode.lang.squirrel.identifier";
+		Syntax = {
+			StartChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+			Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+			Words = (
+				break,
+				case,
+				catch,
+				class,
+				clone,
+				continue,
+				const,
+				default,
+				delegate,
+				delete,
+				else,
+				enum,
+				extends,
+				for,
+				foreach,
+				function,
+				if,
+				in,
+				local,
+				null,
+				resume,
+				return,
+				switch,
+				this,
+				throw,
+				try,
+				typeof,
+				while,
+				parent,
+				yield,
+				constructor,
+				vargc,
+				vargv,
+				instanceof,
+				true,
+				false,
+				static,
+			);
+			Type = "xcode.syntax.keyword";
+			AltType = "xcode.syntax.identifier";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.interestingOperators";
+		Syntax = {
+			Words = (
+				"..",
+				".",
+				":",
+			);
+			Type = "xcode.syntax.plain";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel";
+		Description = "Squirrel Coloring";
+		BasedOn = "xcode.lang.simpleColoring";
+		IncludeInMenu = YES;
+		Name = Squirrel;
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer.toplevel";
+			IncludeRules = (
+				"xcode.lang.squirrel.module",
+				"xcode.lang.squirrel.class",
+				"xcode.lang.squirrel.function",
+				"xcode.lang.squirrel.block",
+				"xcode.lang.squirrel.block.if",
+				"xcode.lang.squirrel.block.while",
+				"xcode.lang.squirrel.block.repeat",
+				"xcode.lang.squirrel.block.for",
+				"xcode.lang.squirrel.bracketexpr",
+				"xcode.lang.lua.parenexpr",
+			);
+			Type = "xcode.syntax.plain";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.lexer";
+		Syntax = {
+			IncludeRules = (
+				"xcode.lang.squirrel.comment",
+				"xcode.lang.squirrel.comment.singleline",
+				"xcode.lang.string",
+				"xcode.lang.string.squirrel0",
+				"xcode.lang.string.squirrel1",
+				"xcode.lang.string.squirrel2",
+				"xcode.lang.string.squirrel3",
+				"xcode.lang.string.squirrel4",
+				"xcode.lang.string.squirrel5",
+				"xcode.lang.character",
+				"xcode.lang.squirrel.identifier",
+				"xcode.lang.number",
+				"xcode.lang.squirrel.interestingOperators",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.lexer.toplevel";
+		Syntax = {
+			IncludeRules = (
+				"xcode.lang.squirrel.comment",
+				"xcode.lang.squirrel.comment.singleline",
+				"xcode.lang.string",
+				"xcode.lang.string.squirrel0",
+				"xcode.lang.string.squirrel1",
+				"xcode.lang.string.squirrel2",
+				"xcode.lang.string.squirrel3",
+				"xcode.lang.string.squirrel4",
+				"xcode.lang.string.squirrel5",
+				"xcode.lang.character",
+				"xcode.lang.squirrel.module.declarator",
+				"xcode.lang.squirrel.class.declarator",
+				"xcode.lang.squirrel.function.declarator",
+				"xcode.lang.squirrel.identifier",
+				"xcode.lang.number",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.string.squirrel0";
+		Syntax = {
+			Start = "\"";
+			End = "\"";
+			Type = "xcode.syntax.string";
+		};
+	},
+	{
+		Identifier = "xcode.lang.string.squirrel1";
+		Syntax = {
+			Start = "'";
+			End = "'";
+			Type = "xcode.syntax.string";
+		};
+	},
+	{
+		Identifier = "xcode.lang.string.squirrel2";
+		Syntax = {
+			Start = "@\"";
+			End = "\"";
+			Type = "xcode.lang.string";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.class";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer.toplevel";
+			Start = "xcode.lang.squirrel.class.declarator";
+			End = end;
+			Foldable = YES;
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.function",
+			);
+			Type = "xcode.syntax.definition.class";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.class.declarator";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				class,
+				"xcode.lang.squirrel.identifier",
+				"xcode.lang.squirrel.superclass?",
+			);
+			Type = "xcode.syntax.name.partial";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.superclass";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				"->",
+				"xcode.lang.squirrel.identifier",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.function";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer.toplevel";
+			Start = "xcode.lang.squirrel.function.declarator";
+			End = end;
+			Foldable = YES;
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.block",
+				"xcode.lang.squirrel.block.if",
+				"xcode.lang.squirrel.block.while",
+				"xcode.lang.squirrel.block.repeat",
+				"xcode.lang.squirrel.block.for",
+				"xcode.lang.squirrel.bracketexpr",
+				"xcode.lang.squirrel.parenexpr",
+			);
+			Type = "xcode.syntax.definition.function";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.function.declarator";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				function,
+				"xcode.lang.squirrel.function.name",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.function.name";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				"xcode.lang.lua.identifier",
+				"xcode.lang.lua.function.name.more?",
+			);
+			Type = "xcode.syntax.name.partial";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.function.name.more";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				".",
+				"xcode.lang.squirrel.identifier",
+			);
+			Type = "xcode.syntax.name.partial";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.block";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Start = "{";
+			End = "}";
+			Foldable = YES;
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.block.if",
+				"xcode.lang.squirrel.block.while",
+				"xcode.lang.squirrel.block.repeat",
+				"xcode.lang.squirrel.block.for",
+				"xcode.lang.squirrel.bracketexpr",
+				"xcode.lang.squirrel.parenexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.block.if";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Start = if;
+			End = end;
+			Foldable = YES;
+			Recursive = YES;
+			StartAtBOL = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.block",
+				"xcode.lang.squirrel.block.while",
+				"xcode.lang.squirrel.block.repeat",
+				"xcode.lang.squirrel.block.for",
+				"xcode.lang.squirrel.bracketexpr",
+				"xcode.lang.squirrel.parenexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.block.while";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Start = while;
+			End = end;
+			Foldable = YES;
+			Recursive = YES;
+			StartAtBOL = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.block",
+				"xcode.lang.squirrel.block.if",
+				"xcode.lang.squirrel.block.repeat",
+				"xcode.lang.squirrel.block.for",
+				"xcode.lang.squirrel.bracketexpr",
+				"xcode.lang.squirrel.parenexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.block.repeat";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Start = repeat;
+			End = until;
+			Foldable = YES;
+			Recursive = YES;
+			StartAtBOL = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.block",
+				"xcode.lang.squirrel.block.if",
+				"xcode.lang.squirrel.block.while",
+				"xcode.lang.squirrel.block.for",
+				"xcode.lang.squirrel.bracketexpr",
+				"xcode.lang.squirrel.parenexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.block.for";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Start = for;
+			End = end;
+			Foldable = YES;
+			Recursive = YES;
+			StartAtBOL = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.block",
+				"xcode.lang.squirrel.block.if",
+				"xcode.lang.squirrel.block.while",
+				"xcode.lang.squirrel.block.repeat",
+				"xcode.lang.squirrel.bracketexpr",
+				"xcode.lang.squirrel.parenexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.parenexpr";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Start = "(";
+			End = ")";
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.bracketexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.bracketexpr";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Start = "[";
+			End = "]";
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.parenexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.comment";
+		Syntax = {
+			Start = "/*";
+			End = "*/";
+			Foldable = YES;
+			IncludeRules = (
+				"xcode.lang.url",
+				"xcode.lang.url.mail",
+				"xcode.lang.comment.mark",
+			);
+			Type = "xcode.syntax.comment";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.comment.singleline";
+		Syntax = {
+			Start = "//";
+			End = "\n";
+			IncludeRules = (
+				"xcode.lang.url",
+				"xcode.lang.url.mail",
+				"xcode.lang.comment.mark",
+			);
+			Type = "xcode.syntax.comment";
+		};
+	},
+)

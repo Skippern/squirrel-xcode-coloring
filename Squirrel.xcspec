@@ -1,0 +1,12 @@
+(
+	{
+		Type = FileType;
+		Identifier = "sourcecode.nut";
+		BasedOn = sourcecode;
+		Name = "Squirrel file";
+		Extensions = (
+			nut,
+		);
+		Language = "xcode.lang.squirrel";
+	},
+)
