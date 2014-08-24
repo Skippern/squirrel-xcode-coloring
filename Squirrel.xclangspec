@@ -48,12 +48,37 @@
 		};
 	},
 	{
-		Identifier = "xcode.lang.squirrel.interestingOperators";
+		Identifier = "xcode.lang.squirrel.operators";
 		Syntax = {
 			Words = (
-				"..",
-				".",
-				":",
+				"!",
+				"!=",
+				"||",
+				"==",
+				"&&",
+				"<=",
+				"=>",
+				"+",
+				"+=",
+				"-",
+				"-=",
+				"/",
+				"/=",
+				"*",
+				"*=",
+				"%",
+				"%=",
+				"++",
+				"--",
+				"<-",
+				"=",
+				"&",
+				"^",
+				"|",
+				"~",
+				">>",
+				"<<",
+				">>>",
 			);
 			Type = "xcode.syntax.plain";
 		};
@@ -91,13 +116,10 @@
 				"xcode.lang.string.squirrel0",
 				"xcode.lang.string.squirrel1",
 				"xcode.lang.string.squirrel2",
-				"xcode.lang.string.squirrel3",
-				"xcode.lang.string.squirrel4",
-				"xcode.lang.string.squirrel5",
 				"xcode.lang.character",
 				"xcode.lang.squirrel.identifier",
 				"xcode.lang.number",
-				"xcode.lang.squirrel.interestingOperators",
+				"xcode.lang.squirrel.operators",
 			);
 		};
 	},
@@ -145,6 +167,23 @@
 			Start = "@\"";
 			End = "\"";
 			Type = "xcode.lang.string";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.number";
+		Syntax = {
+			StartChars = "0123456789.+-";
+			Chars = "0123456789xabcdefABCDEF.-";
+			Match = (
+				"^[-+]?[0-9]+(\\\\.[0-9]+)?%?",
+				"^[-+]?\\\\.[0-9]+%?",
+				"^[-+]?0x[0-9a-fA-F]+%?",
+				"^[-+]?0[0-7]+%?",
+				"^[-+]?[0-9]\\\\.[0-9]+%?",
+				"^[-+]?[0-9]+(\\\\.[0-9]+)?+[eE]+[-]?+[0-9]+%?",
+				"^[-+]?\\\\.[0-9]%?",
+			);
+			Type = "xcode.syntax.number";
 		};
 	},
 	{

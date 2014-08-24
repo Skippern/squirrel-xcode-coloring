@@ -53,7 +53,7 @@ cat >AdditionalLanguages.plist <<EOF
 		<key>version</key>
 		<string>1.0</string>
 		<key>documentationAbbreviation</key>
-		<string>r</string>				
+		<string>nut</string>
 		<key>conformsTo</key>
 		<array>
 			<dict>
