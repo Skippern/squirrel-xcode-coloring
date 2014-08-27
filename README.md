@@ -10,3 +10,7 @@ Based on the work of:
 Squirrel
 ===================
 Squirrel language...
+
+If these definitions deviates from standard Squirrel, it is because of my use of squirrel is **only** in connection with writing [OpenTTD](http://www.openttd.org/) AIs and Gamescripts.
+
+Squirrel2 [documentation online](http://squirrel-lang.org/doc/squirrel2.html) updated to last stable release, might be slightly different from the highlighting, if any important is needed to be added, please leave a note on issues.
