@@ -1,538 +1,491 @@
 (
-
-/****************************************************************************/
-// MARK: squirreldoc
-/****************************************************************************/
-
-    {
-        Identifier = "xcode.lang.squirrel.comment.squirreldoc.keyword";
-        Syntax = {
-            StartChars = "@";
-            Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            Words = (
-                "@author",
-                "@beaninfo",
-                "@deprecated",
-                "@docRoot",
-                "@exception",
-                "@inheritDoc",
-                "@link",
-                "@linkplain",
-                "@param",
-                "@return",
-                "@see",
-                "@serial",
-                "@serialData",
-                "@serialField",
-                "@since",
-                "@throws",
-                "@value",
-                "@version"
-            );
-            Type = "xcode.syntax.comment.doc.keyword";
-        };
-    },
-    {
-        Identifier = "xcode.lang.squirrel.comment.squirreldoc";
-        Syntax = {
-            Start = "/**";
-            End = "*/";
-            Foldable = YES;
-            IncludeRules = ( "xcode.lang.squirrel.comment.squirreldoc.keyword", "xcode.lang.url", "xcode.lang.url.mail", "xcode.lang.comment.mark" );
-            Type = "xcode.syntax.comment.doc";
-        };
-    },
-    {
-        // Handle the degenerate case of '/**/' comments. They look like the start of a squirrelDoc comment, but they aren't.
-        Identifier = "xcode.lang.squirrel.comment.degenerate";
-        Syntax = {
-            StartChars = "/";
-            Chars = "/*";
-            Words = ( "/**/" );
-            Type = "xcode.syntax.comment";
-        };
-    },
-
-
-/****************************************************************************/
-// MARK: squirrel Keywords
-/****************************************************************************/
-
-    {
-        Identifier = "xcode.lang.squirrel.identifier";
-        Syntax = {
-            StartChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
-            Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
-            Words = (
-                "abstract",
-                "assert",
-                "boolean",
-                "break",
-                "byte",
-                "case",
-                "cast",
-                "catch",
-                "char",
-                "class",
-                "const",
-                "continue",
-                "default",
-                "do",
-                "double",
-                "else",
-                "enum",
-                "extends",
-                "false",
-                "final",
-                "finally",
-                "float",
-                "for",
-                "goto",
-                "if",
-                "implements",
-                "import",
-                "instanceof",
-                "int",
-                "interface",
-                "long",
-                "native",
-                "new",
-                "null",
-                "package",
-                "private",
-                "protected",
-                "public",
-                "return",
-                "short",
-                "static",
-                "strictfp",
-                "super",
-                "switch",
-                "synchronized",
-                "this",
-                "throw",
-                "throws",
-                "transient",
-                "true",
-                "try",
-                "void",
-                "volatile",
-                "while"
-             );
-            Type = "xcode.syntax.keyword";
-            AltType = "xcode.syntax.identifier";    // non-keywords are identifiers
-        };
-    },
-
-/****************************************************************************/
-// MARK: squirrel Top Level
-/****************************************************************************/
-
-    {
-        Identifier = "xcode.lang.squirrel";
-        Description = "Squirrel Coloring";
-        BasedOn = "xcode.lang.simpleColoring";
-        IncludeInMenu = YES;
-        UsesCLikeIndentation = YES;
-        Name = "Squirrel";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            IncludeRules = (        // processed in order
-                "xcode.lang.squirrel.package",
-                "xcode.lang.squirrel.import",
-                "xcode.lang.squirrel.class",
-                "xcode.lang.squirrel.interface",
-            );
-            Type = "xcode.syntax.plain";
-        };
-    },
-    
-/****************************************************************************/
-// MARK: Lexers
-/****************************************************************************/
-
-    // The following rule returns tokens to the other rules
-    {
-        Identifier = "xcode.lang.squirrel.lexer";
-        Syntax = {
-            IncludeRules = (
-                "xcode.lang.squirrel.comment.degenerate",
-                "xcode.lang.squirrel.comment.squirreldoc",
-                "xcode.lang.comment",
-                "xcode.lang.comment.singleline",
-                "xcode.lang.string",
-                "xcode.lang.character",
-                "xcode.lang.completionplaceholder",
-                "xcode.lang.squirrel.identifier",
-                "xcode.lang.number",
-            );
-        };
-    },
-    
-/****************************************************************************/
-// MARK: Classes/Interfaces
-/****************************************************************************/
-
-    {
-        Identifier = "xcode.lang.squirrel.class";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "xcode.lang.squirrel.class.declarator",
-                "xcode.lang.squirrel.class.block",
-            );
-            Type = "xcode.syntax.definition.java.class";
-        };
-    },
-    {
-        Identifier = "xcode.lang.squirrel.innerclass";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "xcode.lang.squirrel.method.declarator",
-                "xcode.lang.squirrel.class.block",
-            );
-            Type = "xcode.syntax.definition.java.class";
-        };
-    },
-    
-    {
-        Identifier = "xcode.lang.squirrel.class.declarator";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "class",
-                "xcode.lang.squirrel.class.name",
-                "xcode.lang.squirrel.class.declarator.extends?",
-                "xcode.lang.squirrel.class.declarator.implements?",
-            );
-        };
-    },
-    
-    {
-        Identifier = "xcode.lang.squirrel.class.name";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "xcode.lang.squirrel.identifier",
-                "xcode.lang.squirrel.templateclause?",
-            );
-            Type = "xcode.syntax.name.partial";
-        };
-    },
-    
-    {
-        Identifier = "xcode.lang.squirrel.class.declarator.extends";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "extends",
-                "xcode.lang.squirrel.qualifiedname",
-            );
-        };
-    },
-    
-    {
-        Identifier = "xcode.lang.squirrel.class.declarator.implements";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "implements",
-                "xcode.lang.squirrel.qualifiedname",
-                "xcode.lang.squirrel.classnames.list*",
-            );
-        };
-    },
-    
-    {
-        Identifier = "xcode.lang.squirrel.interface";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Foldable = YES;
-            Recursive = YES;
-            Rules = (
-                "xcode.lang.squirrel.interface.declarator",
-                "xcode.lang.squirrel.interface.block",
-            );
-            Type = "xcode.syntax.declaration.java.interface";
-        };
-    },
-    {
-        Identifier = "xcode.lang.squirrel.interface.declarator";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "interface",
-                "xcode.lang.squirrel.class.name",
-                "xcode.lang.squirrel.interface.declarator.extends?",
-            );
-        };
-    },
-    {
-        Identifier = "xcode.lang.squirrel.interface.declarator.extends";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "extends",
-                "xcode.lang.squirrel.qualifiedname",
-                "xcode.lang.squirrel.classnames.list*",
-            );
-        };
-    },
-
-    {
-        Identifier = "xcode.lang.squirrel.classnames.list";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                ",",
-                "xcode.lang.squirrel.qualifiedname",
-            );
-        };
-    },
-
-    {
-        Identifier = "xcode.lang.squirrel.qualifiedname";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "xcode.lang.squirrel.identifier",
-                "xcode.lang.squirrel.qualifiedname.more*",
-                "xcode.lang.squirrel.templateclause?",
-            );
-        };
-    },
-    {
-        Identifier = "xcode.lang.squirrel.templateclause";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Start = "<";
-            End = ">";
-            Recursive = YES;
-        };
-    },
-    
-    {
-        Identifier = "xcode.lang.squirrel.package.qualifiedname";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "xcode.lang.squirrel.identifier",
-                "xcode.lang.squirrel.import.qualifiedname.more*",
-            );
-            Type = "xcode.syntax.java.package";
-        };
-    },
-    
-    {
-        Identifier = "xcode.lang.squirrel.import.qualifiedname";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "xcode.lang.squirrel.identifier",
-                "xcode.lang.squirrel.import.qualifiedname.more*",
-                "*?",
-            );
-            Type = "xcode.syntax.java.import";
-        };
-    },
-    
-    {
-        Identifier = "xcode.lang.squirrel.import.qualifiedname.more";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                ".",
-                "xcode.lang.squirrel.identifier?",
-            );
-        };
-    },
-    
-    {
-        Identifier = "xcode.lang.squirrel.qualifiedname.more";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                ".",
-                "xcode.lang.squirrel.identifier",
-            );
-        };
-    },
-    
-    {
-        Identifier = "xcode.lang.squirrel.package";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "package",
-                "xcode.lang.squirrel.package.qualifiedname",
-                ";",
-            );
-        };
-    },
-
-    {
-        Identifier = "xcode.lang.squirrel.import";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "import",
-                "xcode.lang.squirrel.import.qualifiedname",
-                ";",
-            );
-        };
-    },
-
-/****************************************************************************/
-// MARK: Methods
-/****************************************************************************/
-
-    {
-        Identifier = "xcode.lang.squirrel.method.declaration";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "xcode.lang.squirrel.method.declarator",
-                "xcode.lang.squirrel.method.declarator.throws?",
-                ";",
-            );
-            Type = "xcode.syntax.declaration.method";
-        };
-    },
-
-    {
-        Identifier = "xcode.lang.squirrel.method.definition";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "xcode.lang.squirrel.method.declarator",
-                "xcode.lang.squirrel.method.declarator.throws?",
-                "xcode.lang.squirrel.block",
-            );
-            Type = "xcode.syntax.definition.method";
-        };
-    },
-    
-    {
-        Identifier = "xcode.lang.squirrel.method.declarator";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "xcode.lang.squirrel.identifier",
-                "xcode.lang.squirrel.parenexpr",
-            );
-            Type = "xcode.syntax.name.partial";
-        };
-    },
-    
-    {
-        Identifier = "xcode.lang.squirrel.method.declarator.throws";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Rules = (
-                "throws",
-                "xcode.lang.squirrel.qualifiedname",
-                "xcode.lang.squirrel.classnames.list*",
-            );
-        };
-    },
-    
-/****************************************************************************/
-// MARK: Blocks
-/****************************************************************************/
-
-    {
-        Identifier = "xcode.lang.squirrel.class.block";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Start = "{";
-            End = "}";
-            Foldable = YES;
-            Recursive = YES;
-            IncludeRules = (
-                "xcode.lang.squirrel.class",
-                "xcode.lang.squirrel.interface",
-                "xcode.lang.squirrel.method.definition",
-                "xcode.lang.squirrel.method.declaration",
-                "xcode.lang.squirrel.bracketexpr",
-                "xcode.lang.squirrel.parenexpr",
-                "xcode.lang.squirrel.initializer",
-            );
-        };
-    },
-    {
-        Identifier = "xcode.lang.squirrel.interface.block";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Start = "{";
-            End = "}";
-            Foldable = YES;
-            Recursive = YES;
-            IncludeRules = (
-                "xcode.lang.squirrel.interface",
-                "xcode.lang.squirrel.method.definition",
-                "xcode.lang.squirrel.method.declaration",
-                "xcode.lang.squirrel.bracketexpr",
-                "xcode.lang.squirrel.parenexpr",
-                "xcode.lang.squirrel.initializer",
-            );
-        };
-    },
-    {
-        Identifier = "xcode.lang.squirrel.block";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Start = "{";
-            End = "}";
-            Foldable = YES;
-            Recursive = YES;
-            IncludeRules = (
-                "xcode.lang.squirrel.class",
-                "xcode.lang.squirrel.interface",
-                "xcode.lang.squirrel.bracketexpr",
-                "xcode.lang.squirrel.parenexpr",
-            );
-        };
-    },
-    {
-        Identifier = "xcode.lang.squirrel.parenexpr";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Start = "(";
-            End = ")";
-            Recursive = YES;
-            IncludeRules = (
-                "xcode.lang.squirrel.bracketexpr",
-                "xcode.lang.squirrel.block",
-                "xcode.lang.squirrel.innerclass",
-            );
-        };
-    },
-    {
-        Identifier = "xcode.lang.squirrel.bracketexpr";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Start = "[";
-            End = "]";
-            Recursive = YES;
-            IncludeRules = (
-                "xcode.lang.squirrel.parenexpr",
-            );
-        };
-    },
-    
-    {
-        Identifier = "xcode.lang.squirrel.initializer";
-        Syntax = {
-            Tokenizer = "xcode.lang.squirrel.lexer";
-            Start = "=";
-            End = ";";
-            Recursive = NO;
-            IncludeRules = (
-                "xcode.lang.squirrel.parenexpr",
-                "xcode.lang.squirrel.bracketexpr",
-            );
-        };
-    },
-
+	{
+		Identifier = "xcode.lang.squirrel.comment.squirreldoc.keyword";
+		Syntax = {
+			StartChars = "@";
+			Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			Words = (
+				"@author",
+				"@beaninfo",
+				"@deprecated",
+				"@docRoot",
+				"@exception",
+				"@inheritDoc",
+				"@link",
+				"@linkplain",
+				"@param",
+				"@return",
+				"@see",
+				"@serial",
+				"@serialData",
+				"@serialField",
+				"@since",
+				"@throws",
+				"@value",
+				"@version",
+			);
+			Type = "xcode.syntax.comment.doc.keyword";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.comment.squirreldoc";
+		Syntax = {
+			Start = "/**";
+			End = "*/";
+			Foldable = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.comment.squirreldoc.keyword",
+				"xcode.lang.url",
+				"xcode.lang.url.mail",
+				"xcode.lang.comment.mark",
+			);
+			Type = "xcode.syntax.comment.doc";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.comment.degenerate";
+		Syntax = {
+			StartChars = "/";
+			Chars = "/*";
+			Words = (
+				"/**/",
+			);
+			Type = "xcode.syntax.comment";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.identifier";
+		Syntax = {
+			StartChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+			Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+			Words = (
+				abstract,
+				assert,
+				boolean,
+				break,
+				byte,
+				case,
+				cast,
+				catch,
+				char,
+				class,
+				const,
+				continue,
+				default,
+				do,
+				double,
+				else,
+				enum,
+				extends,
+				false,
+				final,
+				finally,
+				float,
+				for,
+				goto,
+				if,
+				implements,
+				import,
+				instanceof,
+				int,
+				interface,
+				long,
+				native,
+				new,
+				null,
+				package,
+				private,
+				protected,
+				public,
+				local,
+				function,
+				return,
+				short,
+				static,
+				strictfp,
+				super,
+				switch,
+				synchronized,
+				this,
+				throw,
+				throws,
+				transient,
+				true,
+				try,
+				void,
+				volatile,
+				while,
+			);
+			Type = "xcode.syntax.keyword";
+			AltType = "xcode.syntax.identifier";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel";
+		Description = "Squirrel Coloring";
+		BasedOn = "xcode.lang.simpleColoring";
+		IncludeInMenu = YES;
+		UsesCLikeIndentation = YES;
+		Name = Squirrel;
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			IncludeRules = (
+				"xcode.lang.squirrel.package",
+				"xcode.lang.squirrel.import",
+				"xcode.lang.squirrel.class",
+				"xcode.lang.squirrel.interface",
+			);
+			Type = "xcode.syntax.plain";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.lexer";
+		Syntax = {
+			IncludeRules = (
+				"xcode.lang.squirrel.comment.degenerate",
+				"xcode.lang.squirrel.comment.squirreldoc",
+				"xcode.lang.comment",
+				"xcode.lang.comment.singleline",
+				"xcode.lang.string",
+				"xcode.lang.character",
+				"xcode.lang.completionplaceholder",
+				"xcode.lang.squirrel.identifier",
+				"xcode.lang.number",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.class";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				"xcode.lang.squirrel.class.declarator",
+				"xcode.lang.squirrel.class.block",
+			);
+			Type = "xcode.syntax.definition.java.class";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.innerclass";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				"xcode.lang.squirrel.method.declarator",
+				"xcode.lang.squirrel.class.block",
+			);
+			Type = "xcode.syntax.definition.java.class";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.class.declarator";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				class,
+				"xcode.lang.squirrel.class.name",
+				"xcode.lang.squirrel.class.declarator.extends?",
+				"xcode.lang.squirrel.class.declarator.implements?",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.class.name";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				"xcode.lang.squirrel.identifier",
+				"xcode.lang.squirrel.templateclause?",
+			);
+			Type = "xcode.syntax.name.partial";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.class.declarator.extends";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				extends,
+				"xcode.lang.squirrel.qualifiedname",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.class.declarator.implements";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				implements,
+				"xcode.lang.squirrel.qualifiedname",
+				"xcode.lang.squirrel.classnames.list*",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.interface";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Foldable = YES;
+			Recursive = YES;
+			Rules = (
+				"xcode.lang.squirrel.interface.declarator",
+				"xcode.lang.squirrel.interface.block",
+			);
+			Type = "xcode.syntax.declaration.java.interface";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.interface.declarator";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				interface,
+				"xcode.lang.squirrel.class.name",
+				"xcode.lang.squirrel.interface.declarator.extends?",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.interface.declarator.extends";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				extends,
+				"xcode.lang.squirrel.qualifiedname",
+				"xcode.lang.squirrel.classnames.list*",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.classnames.list";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				",",
+				"xcode.lang.squirrel.qualifiedname",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.qualifiedname";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				"xcode.lang.squirrel.identifier",
+				"xcode.lang.squirrel.qualifiedname.more*",
+				"xcode.lang.squirrel.templateclause?",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.templateclause";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Start = "<";
+			End = ">";
+			Recursive = YES;
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.package.qualifiedname";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				"xcode.lang.squirrel.identifier",
+				"xcode.lang.squirrel.import.qualifiedname.more*",
+			);
+			Type = "xcode.syntax.java.package";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.import.qualifiedname";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				"xcode.lang.squirrel.identifier",
+				"xcode.lang.squirrel.import.qualifiedname.more*",
+				"*?",
+			);
+			Type = "xcode.syntax.java.import";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.import.qualifiedname.more";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				".",
+				"xcode.lang.squirrel.identifier?",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.qualifiedname.more";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				".",
+				"xcode.lang.squirrel.identifier",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.package";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				package,
+				"xcode.lang.squirrel.package.qualifiedname",
+				";",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.import";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				import,
+				"xcode.lang.squirrel.import.qualifiedname",
+				";",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.method.declaration";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				"xcode.lang.squirrel.method.declarator",
+				"xcode.lang.squirrel.method.declarator.throws?",
+				";",
+			);
+			Type = "xcode.syntax.declaration.method";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.method.definition";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				"xcode.lang.squirrel.method.declarator",
+				"xcode.lang.squirrel.method.declarator.throws?",
+				"xcode.lang.squirrel.block",
+			);
+			Type = "xcode.syntax.definition.method";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.method.declarator";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				"xcode.lang.squirrel.identifier",
+				"xcode.lang.squirrel.parenexpr",
+			);
+			Type = "xcode.syntax.name.partial";
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.method.declarator.throws";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Rules = (
+				throws,
+				"xcode.lang.squirrel.qualifiedname",
+				"xcode.lang.squirrel.classnames.list*",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.class.block";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Start = "{";
+			End = "}";
+			Foldable = YES;
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.class",
+				"xcode.lang.squirrel.interface",
+				"xcode.lang.squirrel.method.definition",
+				"xcode.lang.squirrel.method.declaration",
+				"xcode.lang.squirrel.bracketexpr",
+				"xcode.lang.squirrel.parenexpr",
+				"xcode.lang.squirrel.initializer",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.interface.block";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Start = "{";
+			End = "}";
+			Foldable = YES;
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.interface",
+				"xcode.lang.squirrel.method.definition",
+				"xcode.lang.squirrel.method.declaration",
+				"xcode.lang.squirrel.bracketexpr",
+				"xcode.lang.squirrel.parenexpr",
+				"xcode.lang.squirrel.initializer",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.block";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Start = "{";
+			End = "}";
+			Foldable = YES;
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.class",
+				"xcode.lang.squirrel.interface",
+				"xcode.lang.squirrel.bracketexpr",
+				"xcode.lang.squirrel.parenexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.parenexpr";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Start = "(";
+			End = ")";
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.bracketexpr",
+				"xcode.lang.squirrel.block",
+				"xcode.lang.squirrel.innerclass",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.bracketexpr";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Start = "[";
+			End = "]";
+			Recursive = YES;
+			IncludeRules = (
+				"xcode.lang.squirrel.parenexpr",
+			);
+		};
+	},
+	{
+		Identifier = "xcode.lang.squirrel.initializer";
+		Syntax = {
+			Tokenizer = "xcode.lang.squirrel.lexer";
+			Start = "=";
+			End = ";";
+			Recursive = NO;
+			IncludeRules = (
+				"xcode.lang.squirrel.parenexpr",
+				"xcode.lang.squirrel.bracketexpr",
+			);
+		};
+	},
 )
