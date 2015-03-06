@@ -4,7 +4,7 @@ Squirrel Syntax Coloring
 Attempt at Squirrel syntax support for Xcode 6
 
 Based on the work of:
-* Tiago Bastos (lua-xcode-coloring)
+* Tiago Bastos ([lua-xcode-coloring](https://github.com/bastos/lua-xcode-coloring))
 * Alex Karahalios (Install Script)
 
 Squirrel
