@@ -26,6 +26,8 @@ PLISTBUDDY=/usr/libexec/PlistBuddy
 # This framework is found withing the Xcode.app package and is used when Xcode is a monolithic
 # install (all contained in Xcode.app)
 DVTFOUNDATION_PATH="/Applications/Xcode.app/Contents/SharedFrameworks/DVTFoundation.framework/Versions/A/Resources/"
+FILETEMPLATE_PATH="/Applications/Xcode.app/Contents/Developer/Library/Xcode/Templates/File Templates/"
+PROJECTTEMPLATE_PATH="/Applications/Xcode.app/Contents/Developer/Library/Xcode/Templates/Project Templates/"
 
 # Create Plist file of additional languages to add to 'DVTFoundation.xcplugindata'
 cat >AdditionalLanguages.plist <<EOF
@@ -92,6 +94,8 @@ rm -f AdditionalLanguages.plist
 
 # Copy in the xclangspecs for the languages (assumes in same directory as this shell script)
 cp "$SCRIPT_PATH/Squirrel.xclangspec" "$DVTFOUNDATION_PATH"
+cp -Rf "$SCRIPT_PATH/File Templates/Squirrel.xctemplate" "$FILETEMPLATE_PATH/Other"
+cp -Rf "$SCRIPT_PATH/File Templates/OpenTTD" "$FILETEMPLATE_PATH/Other"
 
 # Remove any cached Xcode plugins
 rm -rf /private/var/folders/*/*/*/com.apple.DeveloperTools/*/Xcode/PlugInCache*.xcplugincache
